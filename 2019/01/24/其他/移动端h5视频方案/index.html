@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Video,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言  近日，我司的产品们又有了一个新idea,将视频广告与常规活动结合起来，创造更多玩法场景，以期活动收益提升。所谓是‘产品一张嘴，开发跑断腿’。面对国内恶劣的移动端WebView环境,我们只能马不停蹄的去寻找一个好的解决视频播放的方案来兼容各种移动端WebView环境和满足产品们的需求。  产品对视频广告页的要求有：  视频自动播放； 视频页在播放过程中用户不能快进，不能暂停； 视频声音可手动">
+<meta name="keywords" content="Video">
+<meta property="og:type" content="article">
+<meta property="og:title" content="移动端h5视频方案">
+<meta property="og:url" content="http://yoursite.com/2019/01/24/其他/移动端h5视频方案/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="前言  近日，我司的产品们又有了一个新idea,将视频广告与常规活动结合起来，创造更多玩法场景，以期活动收益提升。所谓是‘产品一张嘴，开发跑断腿’。面对国内恶劣的移动端WebView环境,我们只能马不停蹄的去寻找一个好的解决视频播放的方案来兼容各种移动端WebView环境和满足产品们的需求。  产品对视频广告页的要求有：  视频自动播放； 视频页在播放过程中用户不能快进，不能暂停； 视频声音可手动">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/3/14/1697a193f74d37c2?w=734&h=484&f=png&s=313045">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/3/14/1697a430d2fb8f51?w=2574&h=1346&f=png&s=1159430">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/3/14/1697a3f9a8fe1ab6?w=2652&h=1048&f=png&s=785594">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/3/14/1697b7d612e92f97?w=1718&h=943&f=png&s=1110328">
+<meta property="og:updated_time" content="2019-08-29T09:55:23.719Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="移动端h5视频方案">
+<meta name="twitter:description" content="前言  近日，我司的产品们又有了一个新idea,将视频广告与常规活动结合起来，创造更多玩法场景，以期活动收益提升。所谓是‘产品一张嘴，开发跑断腿’。面对国内恶劣的移动端WebView环境,我们只能马不停蹄的去寻找一个好的解决视频播放的方案来兼容各种移动端WebView环境和满足产品们的需求。  产品对视频广告页的要求有：  视频自动播放； 视频页在播放过程中用户不能快进，不能暂停； 视频声音可手动">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2019/3/14/1697a193f74d37c2?w=734&h=484&f=png&s=313045">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/24/其他/移动端h5视频方案/">
+
+
+
+
+
+  <title>移动端h5视频方案 | Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Life is Now</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/24/其他/移动端h5视频方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yelingxiao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/heading.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">移动端h5视频方案</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T10:16:50+08:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其他/" itemprop="url" rel="index">
+                    <span itemprop="name">其他</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>  近日，我司的产品们又有了一个新idea,将视频广告与常规活动结合起来，创造更多玩法场景，以期活动收益提升。所谓是‘产品一张嘴，开发跑断腿’。面对国内恶劣的移动端WebView环境,我们只能马不停蹄的去寻找一个好的解决视频播放的方案来兼容各种移动端WebView环境和满足产品们的需求。</p>
+<blockquote>
+<p>产品对视频广告页的要求有：</p>
+<ul>
+<li>视频自动播放；</li>
+<li>视频页在播放过程中用户不能快进，不能暂停；</li>
+<li>视频声音可手动选择禁音或者播放；</li>
+<li>可以监听到视频已经播放结束；</li>
+<li>视频播放不卡顿，保证一定的流畅度和清晰度；</li>
+</ul>
+</blockquote>
+<h3 id="一-HTML-Video-标签"><a href="#一-HTML-Video-标签" class="headerlink" title="一. HTML Video 标签"></a>一. HTML Video 标签</h3><p>HTML Video 标签 可用于在HTML或者XHTML文档中嵌入视频内容。就像使用IMG标签插入一张图片一样方便。写个viedo设置一个src属性指向视频地址就可以实现媒体播放了。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">id</span>=<span class="string">"video"</span> <span class="attr">src</span>=<span class="string">"//yun.tuia.cn/jsmpeg/test.mp4"</span> <span class="attr">controls</span>&gt;</span></span><br><span class="line">    您的浏览器不支持Video标签</span><br><span class="line">  <span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>controls 加上此浏览器将提供控件以允许用户控制视频播放，包括音量，搜索和暂停/恢复播放。</p>
+</blockquote>
+<p>在Chrome中的表现是：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/3/14/1697a193f74d37c2?w=734&h=484&f=png&s=313045" alt><br>当然Video标签可设置的属性还有很多，为了满足业务需求我添加了一些属性：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span></span></span><br><span class="line"><span class="tag">    <span class="attr">id</span>=<span class="string">"video"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">src</span>=<span class="string">"//yun.tuia.cn/jsmpeg/test.mp4"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">autoplay</span></span></span><br><span class="line"><span class="tag">    <span class="attr">muted</span></span></span><br><span class="line"><span class="tag">    <span class="attr">webkit-playsinline</span></span></span><br><span class="line"><span class="tag">    <span class="attr">playsinline</span></span></span><br><span class="line"><span class="tag">    <span class="attr">x5-playsinline</span></span></span><br><span class="line"><span class="tag">    <span class="attr">style</span>=<span class="string">"width:100%;"</span>&gt;</span></span><br><span class="line">    您的浏览器不支持Video标签</span><br><span class="line"> <span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> videoEle = <span class="built_in">document</span>.querySelector(<span class="string">'#video'</span>);</span><br><span class="line">videoEle.addEventListener(<span class="string">'timeupdate'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.currentTime);</span><br><span class="line">&#125;)</span><br><span class="line">videoEle.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">this</span>.muted = !<span class="keyword">this</span>.muted &#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>autoplay 布尔属性，指定后，视频会马上自动开始播放，不会停下来等着数据载入结束。</p>
+</blockquote>
+<blockquote>
+<p>muted 布尔属性，指明了视频里的音频的默认设置。设置后，音频会初始化为静音。默认值是false,意味着视频播放的时候音频也会播放 。</p>
+</blockquote>
+<blockquote>
+<p>playsinline 布尔属性，指示视频将“内联”播放，即在元素的播放区域内。请注意，缺少此属性并不意味着视频将始终以全屏模式播放。</p>
+</blockquote>
+<blockquote>
+<p>timeupdate 元素的currentTime属性表示的时间已经改变。</p>
+</blockquote>
+<p>具体的API详情可以去<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video" target="_blank" rel="noopener">MDN</a>上查阅</p>
+<p>那么我们在来看看Video标签和MPEG-4在移动端浏览器上的兼容性</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/3/14/1697a430d2fb8f51?w=2574&h=1346&f=png&s=1159430" alt></p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/3/14/1697a3f9a8fe1ab6?w=2652&h=1048&f=png&s=785594" alt></p>
+<blockquote>
+<p>MP4和MPEG-4之间的关系</p>
+<ul>
+<li>MP4是MPEG-4 Part 14（不适用于MPEG4）的缩写。它可以是视频文件扩展名（.mp4），用于存储视频和音频数据的容器格式，以及视频格式。</li>
+<li>MPEG-4：它是MPEG组的压缩方法，专为低带宽（低于1.5MBit / sec比特率）视频/音频编码而设计。</li>
+</ul>
+</blockquote>
+<p>MP4是MPEG-4的媒体容器格式之一。除此之外，以MPEG-4编码的视频还具有其他媒体容器格式，如Matroska（MKV），AVI，MXF，Ogg和QuickTime。</p>
+<p>有个公式显示为：媒体容器=视频格式（视频编解码器）+音频格式（音频编解码器）+字幕</p>
+<p>那么：MP4（.mp4）= MP4视频格式（.mpeg4 / .h264视频编解码器）+音频格式（mp3，aac等）+字幕</p>
+<p>MPEG-4 和 MP4的具体差异可以访问这篇文章：<a href="https://www.videosolo.com/tutorials/mpeg4-vs-mp4.html" target="_blank" rel="noopener">MPEG4 vs MP4: What Are The Differences Between MPEG4 and MP4?
+</a></p>
+<p>通过上面可以看到，目前MP4和video各浏览器的兼容较好。当我了解到这，多么令人喜悦啊！直接可以应用了啊！产品的需求满足了呀！但是，理想很丰满，现实很残酷，当我以为我在chrome和ios上的safari上完美实现方案的时候，各大安卓手机的WebView和微信环境给我了我沉重的打击。<br>各个手机厂商的浏览器和app自己封装的WebView对于video播放器真的百花齐放呀（各个手机厂家有各个厂家的控件UI，还有不同app内WebView，效果也不一样）起初ios为了不浪费用户的流量。移动端不允许自动播放有声音，必须有用户的行为操作（现在安卓也这样）,需求中要求手机没有进度条，不能快进，后退等直接给跪了。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/3/14/1697b7d612e92f97?w=1718&h=943&f=png&s=1110328" alt></p>
+<h3 id="二-JSMpeg-方案"><a href="#二-JSMpeg-方案" class="headerlink" title="二. JSMpeg 方案"></a>二. JSMpeg 方案</h3><p>见识了五花八门的移动端WebView环境下video的ui控件，我已经对此失去信心，无法满足产品的需求。换个思路，在google上稍作搜索，便有所收获。<a href="https://github.com/phoboslab/jsmpeg" target="_blank" rel="noopener">JSMpeg</a>这个库吸引了我。这个库的大致思路就是使用js进行视频解码，在用canvas逐帧画出图像，那么只要WebView支持canvas,就能实现视频广告的播放啦。</p>
+<p>使用jsemp的优势（MPEG1 Video &amp; MP2 Audio Decoder in JavaScript）</p>
+<ol>
+<li>适用于所有现代浏览器的视频和音频格式。</li>
+<li>没有许可费。所有MPEG1和MP2专利均已过期。</li>
+<li>非常严格地控制音频和视频解码器以实现您的想法。</li>
+<li>具有高帧速率和可接受的质量和比特率的极低延迟实时流。</li>
+<li>您可以从上到下理解的堆栈。</li>
+</ol>
+<p>当他拥有前三点的时候它就已经完美的符合了我们现在的业务需求了。</p>
+<p>首先我们需要对.mp4的视频进行转码转成.ts文件</p>
+<blockquote>
+<p>JSMpeg仅支持使用MPEG1视频编解码器和MP2音频编解码器播放MPEG-TS容器。视频解码器无法正确处理B帧（尽管默认情况下似乎没有现代编码器使用这些），并且视频的宽度必须是2的倍数。</p>
+</blockquote>
+<p>我们可以使用这个转换视频格式、生成视频流的神器 : <a href="https://ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a></p>
+<blockquote>
+<p>.ts和.mp4一样都是一种媒体容器, .ts和.mp4的区别主要表现为两者的封装形式不同</p>
+</blockquote>
+<p>您可以使用ffmpeg对合适的视频进行编码，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i in.mp4 -f mpegts -codec：v mpeg1video -codec：a mp2 -b 0 out.ts</span><br></pre></td></tr></table></figure>
+
+<p>您还可以控制视频大小（-s），帧速率（-r），视频比特率（-b:v），音频比特率（-b:a），音频通道数（-ac），采样率（-ar）等等。有关详细信息，请参阅<a href="https://ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a>文档。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i in.mp4 -f mpegts \</span><br><span class="line">	-codec：v mpeg1video -s 960x540 -b：v 1500k -r 30 -bf 0 \</span><br><span class="line">	-codec：一个mp2 -ar 44100 -ac 1 -b：一个128k \</span><br><span class="line">	out.ts</span><br></pre></td></tr></table></figure>
+
+<pre><code>比如你想提高视频的比特率（清晰度）就能将 -b：v 5000k 但是相应的.ts文件体积也会变大</code></pre><p>JSMpeg的引入方式只能通过在html中加载源文件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script  src = “ jsmpeg.min.js ”&gt; <span class="xml"><span class="tag">&lt;/ <span class="attr">script</span> &gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>JSMpeg使用：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>jsmpeg解决方案<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"canvas"</span> <span class="attr">style</span>=<span class="string">"width: 100vw;"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"ua"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://yun.tuia.cn/jsmpeg/jsmpeg.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> player = <span class="keyword">new</span> JSMpeg.Player(<span class="string">'//yun.dui88.com/jsmpeg/test.ts'</span>, &#123;</span><br><span class="line">        disableGl: <span class="literal">true</span>,</span><br><span class="line">        disableWebAssembly: <span class="literal">true</span>,</span><br><span class="line">        loop: <span class="literal">false</span>,</span><br><span class="line">        autoplay: <span class="literal">true</span>,</span><br><span class="line">        canvas: <span class="built_in">document</span>.querySelector(<span class="string">'#canvas'</span>),</span><br><span class="line">        onEnded: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'JSMpeg already end'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"><span class="built_in">document</span>.querySelector(<span class="string">'#ua'</span>).innerHTML = navigator.userAgent</span><br></pre></td></tr></table></figure>
+
+<p>上述代码就可以使视频转成canvas播放了并且视频自动播放，视频页在播放过程中用户不能快进，不能暂停，可以监听到视频已经播放结束。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 为统一用户交互即muted（静音）自动播放，Android系统下未使用chromium M71版本的webview仍不支持autoplay策略（浏览器市场占比较大）。</span></span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">toggleVolumn</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">     <span class="comment">// 如果是依据autoplay policy而消音</span></span><br><span class="line">     <span class="keyword">if</span> (!player.audioOut.unlocked) &#123;</span><br><span class="line">       <span class="comment">// 解除消音</span></span><br><span class="line">       player.audioOut.unlock();</span><br><span class="line">       <span class="comment">// 避免一些隐患手动设置volume</span></span><br><span class="line">       player.audioOut.volume = <span class="number">1</span>;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       player.volume = player.volume &gt; <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">document</span>.querySelector(<span class="string">'#canvas'</span>).addEventListener(<span class="string">'click'</span>, toggleVolumn, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p>通过上述代码就可以实现视频声音可手动选择禁音或者播放。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><ul>
+<li>即使W3C API标准也越来越完美了，但是大部分的设备、浏览器、WebView厂商在标准的支持上也各有各的想法，制定这自己的规范标准，导致出现了很多不同的Ui风格。</li>
+<li>JSMpeg在各种机型、浏览器、和WebView环境下展现出极好的Ui统一，并且拥有很多API可以控制视频，音频，足够满足业务需求。</li>
+<li>由于JSMpeg采取分段传输加载，所以首次加载视频播放速度比video快，但中间网络波动会使视频卡顿。</li>
+<li>将.mp4格式文件转成.ts使文件体积变大。</li>
+<li>部分浏览器版本和WebView出现音画不同步的情况。</li>
+</ul>
+<p>对比而言，通过使用jsmpeg解决方案还是成功的满足了产品的需求，并成功上线投入产出，获得了预期的效果。</p>
+<h3 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h3><p><a href="https://phoboslab.org/log/2017/02/decode-it-like-its-1999" target="_blank" rel="noopener">Decode It Like It’s 1999</a></p>
+<p><a href="https://chimee.org/docs/chimee_player_preface.html" target="_blank" rel="noopener">H5-Video 能做的事&amp;存在的坑</a></p>
+<p><a href="https://imququ.com/post/html5-live-player-2.html" target="_blank" rel="noopener">HTML5 视频直播（二）</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video" target="_blank" rel="noopener">MDN</a></p>
+<p><a href="https://www.videosolo.com/tutorials/mpeg4-vs-mp4.html" target="_blank" rel="noopener">MPEG4 vs MP4: What Are The Differences Between MPEG4 and MP4?</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Video/" rel="tag"><i class="fa fa-tags"></i> Video</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/23/html&css/HTML/" rel="prev" title="HTML">
+                HTML <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/heading.jpeg" alt="Yelingxiao">
+            
+              <p class="site-author-name" itemprop="name">Yelingxiao</p>
+              <p class="site-description motion-element" itemprop="description">Blog.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yelingxiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:yelingxiao0925@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一-HTML-Video-标签"><span class="nav-number">2.</span> <span class="nav-text">一. HTML Video 标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-JSMpeg-方案"><span class="nav-number">3.</span> <span class="nav-text">二. JSMpeg 方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结论"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关文章"><span class="nav-number">5.</span> <span class="nav-text">相关文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yelingxiao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

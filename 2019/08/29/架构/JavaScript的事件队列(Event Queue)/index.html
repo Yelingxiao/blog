@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="javascript,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言  在写代码的时候经常思考一个问题,到底是那个函数先执行，本身JavaScript是一门单线程的语言，意思就是按照顺序执行。但是加入一些setTimeout和promise的函数来又实现了异步操作，常常我会写一个setTimeout(fn,0),他会立即执行吗？ 宏任务和微任务  首先我们先来看一段代码：  12345678910111213141516&amp;lt;script&amp;gt;consol">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript的事件队列(Event Queue)">
+<meta property="og:url" content="http://yoursite.com/2019/08/29/架构/JavaScript的事件队列(Event Queue)/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="前言  在写代码的时候经常思考一个问题,到底是那个函数先执行，本身JavaScript是一门单线程的语言，意思就是按照顺序执行。但是加入一些setTimeout和promise的函数来又实现了异步操作，常常我会写一个setTimeout(fn,0),他会立即执行吗？ 宏任务和微任务  首先我们先来看一段代码：  12345678910111213141516&amp;lt;script&amp;gt;consol">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/9/16/165e1427075ec517?w=1146&h=960&f=png&s=300595">
+<meta property="og:updated_time" content="2019-08-29T11:00:47.857Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript的事件队列(Event Queue)">
+<meta name="twitter:description" content="前言  在写代码的时候经常思考一个问题,到底是那个函数先执行，本身JavaScript是一门单线程的语言，意思就是按照顺序执行。但是加入一些setTimeout和promise的函数来又实现了异步操作，常常我会写一个setTimeout(fn,0),他会立即执行吗？ 宏任务和微任务  首先我们先来看一段代码：  12345678910111213141516&amp;lt;script&amp;gt;consol">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/9/16/165e1427075ec517?w=1146&h=960&f=png&s=300595">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/29/架构/JavaScript的事件队列(Event Queue)/">
+
+
+
+
+
+  <title>JavaScript的事件队列(Event Queue) | Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Life is Now</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/29/架构/JavaScript的事件队列(Event Queue)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yelingxiao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/heading.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JavaScript的事件队列(Event Queue)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-29T18:59:49+08:00">
+                2019-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>  在写代码的时候经常思考一个问题,到底是那个函数先执行，本身JavaScript是一门单线程的语言，意思就是按照顺序执行。但是加入一些setTimeout和promise的函数来又实现了异步操作，常常我会写一个setTimeout(fn,0),他会立即执行吗？</p>
+<h3 id="宏任务和微任务"><a href="#宏任务和微任务" class="headerlink" title="宏任务和微任务"></a>宏任务和微任务</h3><p>  首先我们先来看一段代码：<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"Start"</span>);</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"SetTimeout"</span>);</span><br><span class="line">&#125;,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Promise"</span>);</span><br><span class="line">  resolve();</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Then"</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"End"</span>);</span><br><span class="line">&lt;script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这些日志的打印顺序是:</p>
+<pre><code>Start
+Promise
+End
+Then
+SetTimeout</code></pre><p><strong>这是为什么</strong></p>
+<p>首先，我们知道JavaScript的一大特点就是单线程，而这个线程中拥有唯一的一个事件循环。</p>
+<p>一个线程中，事件循环是唯一的，但是任务队列可以拥有多个。</p>
+<p>任务队列又分为macro-task（宏任务）与micro-task（微任务），在最新标准中，它们被分别称为task与jobs。</p>
+<p><strong>宏任务</strong></p>
+<ul>
+<li>setTimeout</li>
+<li>setInterval</li>
+<li>I/O</li>
+<li>script代码块</li>
+</ul>
+<p><strong>微任务</strong></p>
+<ul>
+<li>nextTick</li>
+<li>callback</li>
+<li>Promise</li>
+<li>process.nextTick</li>
+<li>Object.observe</li>
+<li>MutationObserver</li>
+</ul>
+<p>事件循环的顺序，决定js代码的执行顺序。<strong>一段代码块就是一个宏任务</strong>。进入整体代码(宏任务)后，开始第一次循环。接着执行所有的微任务。然后再次从宏任务开始，找到其中一个任务队列执行完毕，再执行所有的微任务。</p>
+<p><strong>主线程（宏任务） =&gt; 微任务 =&gt; 宏任务 =&gt; 主线程</strong></p>
+<p>下图是简易版的事件循环：<br><img src="https://user-gold-cdn.xitu.io/2018/9/16/165e1427075ec517?w=1146&h=960&f=png&s=300595" alt></p>
+<p>所以在上面的代码中宏任务有script代码块，setTimeout，微任务有Promise</p>
+<p><strong>事件循环流程分析如下</strong>：</p>
+<ul>
+<li>整体<code>script</code> 作为第一个宏任务进入主线程，遇到console.log，输出<code>Start</code>。</li>
+<li>遇到<code>setTimeout</code>，其回调函数被分发到宏任务Event Queue中。</li>
+<li>遇到<code>Promise</code>，new Promise直接执行，输出Promise。then被分发到微任务Event Queue中。</li>
+<li>遇到console.log，立即执行，输出<code>End</code>。</li>
+<li>整体代码<code>script</code>作为第一个宏任务执行结束，看看有哪些微任务？我们发现了<code>then</code>在微任务Event Queue里面，执行</li>
+<li>ok，第一轮事件循环结束了，我们开始第二轮循环，当然要从宏任务Event Queue开始。我们发现了宏任务Event Queue中<code>setTimeout</code>对应的回调函数，立即执行。</li>
+<li>所以代码结束。</li>
+</ul>
+<p>提高下难度在来一段较为复杂的代码来检验是否已经基本了解了事件循环的机制</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'async1 start'</span>);</span><br><span class="line">  <span class="keyword">await</span> async2();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'async1 end'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'async2'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'script start'</span>);</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setTimeout1'</span>);</span><br><span class="line">&#125;, <span class="number">200</span>);</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setTimeout2'</span>);</span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">        resolve();</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'then1'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'Promise1'</span>);</span><br><span class="line">        resolve();</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'then2'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;,<span class="number">0</span>)</span><br><span class="line">async1();</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'promise2'</span>);</span><br><span class="line">    resolve();</span><br><span class="line">  &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'then3'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'script end'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>第一轮事件循环流程分析如下:</p>
+<ul>
+<li><p>整体script作为第一个宏任务进入主线程,async1(),和async12()函数申明，但并没有执行，遇到<code>console.log</code>输出<code>script start</code>。</p>
+</li>
+<li><p>继续向下执行，遇到<code>setTimeout</code>,把它的回调函数放入宏任务Event Queue。(ps:暂且叫他setTimeout1)</p>
+<table>
+<thead>
+<tr>
+<th>宏任务</th>
+<th>微任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>继续向下执行，又遇到一个<code>setTimeout</code>，继续将他放入宏任务Event Queue。(ps:暂且叫他setTimeout2)</p>
+<table>
+<thead>
+<tr>
+<th>宏任务</th>
+<th>微任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout1</td>
+<td></td>
+</tr>
+<tr>
+<td>setTimeout2</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>遇到执行async1(), 进入<code>async</code>的执行上下文之后，遇到<code>console.log</code>输出  <code>async1 start</code></p>
+</li>
+<li><p>然后遇到await async2()，由于<code>()</code>的优先级高，所有立即执行<code>async2()</code>，进入<code>async2()</code>的执行上下文。</p>
+</li>
+<li><p>看到<code>console.log</code>输出<code>async2</code>，之后没有返回值，结束函数，返回undefined，返回<code>async1</code>的执行上下文的await undefined，由于<code>async</code>函数使用<code>await</code>后得语句会被放入一个回调函数中，所以把下面的放入微任务Event Queue中。</p>
+<table>
+<thead>
+<tr>
+<th>宏任务</th>
+<th>微任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout1</td>
+<td>async1 =&gt; awati 后面的语句</td>
+</tr>
+<tr>
+<td>setTimeout2</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>结束<code>async1()</code> 遇到<code>Promise</code>，new Promise直接执行，输出<code>Promise2</code>。<code>then</code>后面的函数被分发到微任务Event Queue中</p>
+<table>
+<thead>
+<tr>
+<th>宏任务</th>
+<th>微任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout1</td>
+<td>async1 =&gt; awati 后面的语句</td>
+</tr>
+<tr>
+<td>setTimeout2</td>
+<td>new Promise() =&gt; 后的then</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>执行完<code>Promise()</code>，遇到<code>console.log</code>,输出<code>script end</code>,这里一个宏任务代码块执行完毕。</p>
+</li>
+<li><p>在主线程执行的过程中，<strong>事件触发线程</strong>一直在监听着异步事件，<br>当主线程空闲下来后，若微任务队列中有任务未执行，执行的事件队列(Event Queue)中有微任务，遇到<code>new Promise()</code>后面的回调函数，执行代码，输出<code>then3</code>。</p>
+</li>
+<li><p>看到 <code>async1</code>中<code>await</code>后面的回调函数，执行代码，输出<code>async1 end</code>(注意：如果俩个微任务的优先级相同那么任务队列自上而下执行，但是<strong>promise的优先级高于async</strong>，所以先执行promise后面的回调函数)</p>
+</li>
+<li><p>自此，第一轮事件循环正式结束，这一轮的结果是输出：<code>script start =&gt; async1 start =&gt; async2 =&gt; promise2 =&gt; script end =&gt; then3 =&gt; async1 end</code></p>
+<table>
+<thead>
+<tr>
+<th>宏任务</th>
+<th>微任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout1</td>
+<td></td>
+</tr>
+<tr>
+<td>setTimeout2</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>那么第二轮时间循环从setTimeout宏任务开始：</p>
+</li>
+<li><p>setTimeout和setInterval的运行机制是，将指定的代码移出本次执行，等到下一轮Event Loop时，再检查是否到了指定时间。如果到了，就执行对应的代码；如果不到，就等到再下一轮Event Loop时重新判断。因为setTimeout1有200ms的延时，并没到达指定时间，所以先执行setTimeout2这个宏任务</p>
+</li>
+<li><p>进入到setTimeout2，遇到<code>console.log</code>首先输出<code>setTimeout2</code>;</p>
+</li>
+<li><p>遇到<code>Promise</code>，new Promise直接执行。<code>then</code>后面的函数被分发到微任务Event Queue中</p>
+<table>
+<thead>
+<tr>
+<th>宏任务</th>
+<th>微任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout1</td>
+<td>new Promise() =&gt; 后的then1</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>再次遇到<code>Promise</code>，new Promise直接执行输出<code>promise1</code>。<code>then</code>后面的函数被分发到微任务Event Queue中</p>
+<table>
+<thead>
+<tr>
+<th>宏任务</th>
+<th>微任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout1</td>
+<td>new Promise() =&gt; 后的then1</td>
+</tr>
+<tr>
+<td>空</td>
+<td>new Promise() =&gt; 后的then2</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>主线程执行执行空闲，开始执行微任务队列中依次输出<code>then1</code>和<code>then2</code>。</p>
+</li>
+<li><p>第二轮事件循环正式结束。第二轮依次输出<code>promise1 =&gt; then1 =&gt; then2</code></p>
+</li>
+<li><p>现在任务队列中只有个延时200ms的setTimeout1，在到达200ms后执行setTimeout的回调函数输出<code>setTimeout1</code></p>
+</li>
+<li><p>时间循环结束</p>
+</li>
+<li><p>整段代码，完整的输出为<code>script start =&gt; async1 start =&gt; async2 =&gt; promise2 =&gt; script end =&gt; then3 =&gt; async1 end =&gt; promise1 =&gt; then1 =&gt; then2 =&gt; setTimeout1</code></p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>在执行栈中执行一个宏任务。</li>
+<li>在执行过程中遇到微任务和宏任务，分别添加到微任务队列和宏任务队列中去。</li>
+<li>当前宏任务执行完毕，立即执行微任务队列中的任务（微任务存在优先级，优先级高的先执行）。</li>
+<li>当前微任务队列中的任务执行完毕，检查渲染，GUI线程接管渲染。</li>
+<li>继续执行下一个宏任务从事件队列中取。</li>
+</ol>
+<p>所以在我们写下<code>setTimeout(fn,0)</code>的时候他并不是在当时立即执行，是从下一个<code>Event loop</code>开始执行,即是等当前所有脚本执行完再运行,就是”尽可能早”。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"><i class="fa fa-tags"></i> javascript</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/16/html&css/flex/" rel="next" title="让CSS flex布局最后一行列表左对齐的N种方法">
+                <i class="fa fa-chevron-left"></i> 让CSS flex布局最后一行列表左对齐的N种方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/heading.jpeg" alt="Yelingxiao">
+            
+              <p class="site-author-name" itemprop="name">Yelingxiao</p>
+              <p class="site-description motion-element" itemprop="description">Blog.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yelingxiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:yelingxiao0925@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#宏任务和微任务"><span class="nav-number">2.</span> <span class="nav-text">宏任务和微任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yelingxiao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
