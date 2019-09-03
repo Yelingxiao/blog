@@ -114,13 +114,13 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="相对于HTTP1.0，HTTP1.1的优化：  缓存处理：多了Entity tag，If-Unmodified-Since, If-Match, If-None-Match等缓存信息（HTTTP1.0 If-Modified-Since,Expires） 带宽优化及网络连接的使用 错误通知的管理 Host头处理 长连接： HTTP1.1中默认开启Connection： keep-alive，一定程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://yelingxiao.github.io/Users/yelingxiao/Downloads/290582306-59b7a2f997310_articlex.png">
-<meta property="og:image" content="https://yelingxiao.github.io/Users/yelingxiao/Downloads/1362734992-59b7a50b08bf4_articlex.png">
-<meta property="og:updated_time" content="2019-09-03T02:30:19.045Z">
+<meta property="og:image" content="https://yelingxiao.github.io/images/http_1.png">
+<meta property="og:image" content="https://yelingxiao.github.io/images/http_2.png">
+<meta property="og:updated_time" content="2019-09-03T02:43:57.286Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP2和HTTP1有什么区别">
 <meta name="twitter:description" content="相对于HTTP1.0，HTTP1.1的优化：  缓存处理：多了Entity tag，If-Unmodified-Since, If-Match, If-None-Match等缓存信息（HTTTP1.0 If-Modified-Since,Expires） 带宽优化及网络连接的使用 错误通知的管理 Host头处理 长连接： HTTP1.1中默认开启Connection： keep-alive，一定程">
-<meta name="twitter:image" content="https://yelingxiao.github.io/Users/yelingxiao/Downloads/290582306-59b7a2f997310_articlex.png">
+<meta name="twitter:image" content="https://yelingxiao.github.io/images/http_1.png">
 
 
 
@@ -411,11 +411,11 @@
 <h3 id="HTTP-2的多路复用"><a href="#HTTP-2的多路复用" class="headerlink" title="HTTP/2的多路复用"></a>HTTP/2的多路复用</h3><p>HTTP/2的多路复用就是为了解决上述的两个性能问题，我们来看一下，他是如何解决的。</p>
 <ul>
 <li><p>解决第一个：在<code>HTTP1.1</code>的协议中，我们传输的<code>request</code>和<code>response</code>都是基本于文本的，这样就会引发一个问题：所有的数据必须按顺序传输，比如需要传输：<code>hello world</code>，只能从<code>h</code>到<code>d</code>一个一个的传输，不能并行传输，因为接收端并不知道这些字符的顺序，所以并行传输在<code>HTTP1.1</code>是不能实现的。</p>
-<p><img src="/Users/yelingxiao/Downloads/290582306-59b7a2f997310_articlex.png" alt></p>
+<p><img src="/images/http_1.png" alt></p>
 </li>
 </ul>
 <p><code>HTTP/2</code>引入<code>二进制数据帧</code>和<code>流</code>的概念，其中帧对数据进行顺序标识，如下图所示，这样浏览器收到数据之后，就可以按照序列对数据进行合并，而不会出现合并后数据错乱的情况。同样是因为有了序列，服务器就可以并行的传输数据，这就是<code>流</code>所做的事情。</p>
-<p><img src="/Users/yelingxiao/Downloads/1362734992-59b7a50b08bf4_articlex.png" alt></p>
+<p><img src="/images/http_2.png" alt></p>
 <ul>
 <li>解决第二个问题：<code>HTTP/2</code>对同一域名下所有请求都是基于<code>流</code>，也就是说同一域名不管访问多少文件，也只<strong>建立一路连接</strong>。同样<code>Apache</code>的最大连接数为300，因为有了这个新特性，最大的并发就可以提升到300，比原来提升了6倍！</li>
 </ul>
