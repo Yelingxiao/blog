@@ -114,7 +114,7 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="相对于HTTP1.0，HTTP1.1的优化：  缓存处理：多了Entity tag，If-Unmodified-Since, If-Match, If-None-Match等缓存信息（HTTTP1.0 If-Modified-Since,Expires） 带宽优化及网络连接的使用 错误通知的管理 Host头处理 长连接： HTTP1.1中默认开启Connection： keep-alive，一定程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-03T03:32:47.671Z">
+<meta property="og:updated_time" content="2019-10-22T03:12:28.137Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP2和HTTP1有什么区别">
 <meta name="twitter:description" content="相对于HTTP1.0，HTTP1.1的优化：  缓存处理：多了Entity tag，If-Unmodified-Since, If-Match, If-None-Match等缓存信息（HTTTP1.0 If-Modified-Since,Expires） 带宽优化及网络连接的使用 错误通知的管理 Host头处理 长连接： HTTP1.1中默认开启Connection： keep-alive，一定程">
@@ -417,10 +417,45 @@
 <li><strong>JS文件的合并</strong>。我们现在优化的一个主要方向就是尽量的减少HTTP的请求数， 对我们工程中的代码，研发时分模块开发，上线时我们会把所有的代码进行压缩合并，合并成一个文件，这样不管多少模块，都请求一个文件，减少了HTTP的请求数。但是这样做有一个非常严重的问题：文件的缓存。当我们有100个模块时，有一个模块改了东西，按照之前的方式，整个文件浏览器都需要重新下载，不能被缓存。现在我们有了<code>HTTP/2</code>了，模块就可以单独的压缩上线，而不影响其他没有修改的模块。</li>
 <li><strong>多域名提高浏览器的下载速度</strong>。之前我们有一个优化就是把css文件和js文件放到2个域名下面，这样浏览器就可以对这两个类型的文件进行同时下载，避免了浏览器6个通道的限制，这样做的缺点也是明显的，1.DNS的解析时间会变长。2.增加了服务器的压力。有了<strong>HTTP/2</strong>之后，根据上面讲的原理，我们就不用这么搞了，成本会更低。</li>
 </ul>
+<hr>
+<h3 id="HTTP-3-新特性"><a href="#HTTP-3-新特性" class="headerlink" title="HTTP/3 新特性"></a>HTTP/3 新特性</h3><h4 id="1-HTTP-2-的缺点"><a href="#1-HTTP-2-的缺点" class="headerlink" title="1.HTTP/2 的缺点"></a>1.HTTP/2 的缺点</h4><p>虽然 HTTP/2 解决了很多之前旧版本的问题，但是它还是存在一个巨大的问题，<strong>主要是底层支撑的 TCP 协议造成的</strong>。HTTP/2的缺点主要有以下几点：</p>
+<ul>
+<li>TCP 以及 TCP+TLS建立连接的延时</li>
+</ul>
+<p>HTTP/2使用TCP协议来传输的，而如果使用HTTPS的话，还需要使用TLS协议进行安全传输，而使用TLS也需要一个握手过程，<strong>这样就需要有两个握手延迟过程</strong>：</p>
+<p>①在建立TCP连接的时候，需要和服务器进行三次握手来确认连接成功，也就是说需要在消耗完1.5个RTT之后才能进行数据传输。</p>
+<p>②进行TLS连接，TLS有两个版本——TLS1.2和TLS1.3，每个版本建立连接所花的时间不同，大致是需要1~2个RTT。</p>
+<p>总之，在传输数据之前，我们需要花掉 3～4 个 RTT。</p>
+<ul>
+<li>TCP的队头阻塞并没有彻底解决</li>
+</ul>
+<p>上文我们提到在HTTP/2中，多个请求是跑在一个TCP管道中的。但当出现了丢包时，HTTP/2 的表现反倒不如 HTTP/1 了。因为TCP为了保证可靠传输，有个特别的“丢包重传”机制，丢失的包必须要等待重新传输确认，HTTP/2出现丢包时，整个 TCP 都要开始等待重传，那么就会阻塞该TCP连接中的所有请求（如下图）。而对于 HTTP/1.1 来说，可以开启多个 TCP 连接，出现这种情况反到只会影响其中一个连接，剩余的 TCP 连接还可以正常传输数据。</p>
+<h3 id="2-HTTP-3简介"><a href="#2-HTTP-3简介" class="headerlink" title="2.HTTP/3简介"></a>2.HTTP/3简介</h3><p>Google 在推SPDY的时候就已经意识到了这些问题，于是就另起炉灶搞了一个基于 UDP 协议的“QUIC”协议，让HTTP跑在QUIC上而不是TCP上。 而这个“HTTP over QUIC”就是HTTP协议的下一个大版本，HTTP/3。它在HTTP/2的基础上又实现了质的飞跃，真正“完美”地解决了“队头阻塞”问题。</p>
+<p>![image-20191022110625632](/Users/yelingxiao/Library/Application Support/typora-user-images/image-20191022110625632.png)</p>
+<p>QUIC 虽然基于 UDP，但是在原本的基础上新增了很多功能，接下来我们重点介绍几个QUIC新功能。不过HTTP/3目前还处于草案阶段，正式发布前可能会有变动，所以本文尽量不涉及那些不稳定的细节。</p>
+<h3 id="3-QUIC新功能"><a href="#3-QUIC新功能" class="headerlink" title="3.QUIC新功能"></a>3.QUIC新功能</h3><p>上面我们提到QUIC基于UDP，而UDP是“无连接”的，根本就不需要“握手”和“挥手”，所以就比TCP来得快。此外QUIC也实现了可靠传输，保证数据一定能够抵达目的地。它还引入了类似HTTP/2的“流”和“多路复用”，单个“流”是有序的，可能会因为丢包而阻塞，但其他“流”不会受到影响。具体来说QUIC协议有以下特点：</p>
+<ul>
+<li>实现了类似TCP的流量控制、传输可靠性的功能。</li>
+</ul>
+<p>虽然UDP不提供可靠性的传输，但QUIC在UDP的基础之上增加了一层来保证数据可靠性传输。它提供了数据包重传、拥塞控制以及其他一些TCP中存在的特性。</p>
+<ul>
+<li>实现了快速握手功能。</li>
+</ul>
+<p>由于QUIC是基于UDP的，所以QUIC可以实现使用0-RTT或者1-RTT来建立连接，这意味着QUIC可以用最快的速度来发送和接收数据，这样可以大大提升首次打开页面的速度。<strong>0RTT 建连可以说是 QUIC 相比 HTTP2 最大的性能优势</strong>。</p>
+<ul>
+<li>集成了TLS加密功能。</li>
+</ul>
+<p>目前QUIC使用的是TLS1.3，相较于早期版本TLS1.3有更多的优点，其中最重要的一点是减少了握手所花费的RTT个数。</p>
+<ul>
+<li>多路复用，彻底解决TCP中队头阻塞的问题</li>
+</ul>
+<p>和TCP不同，QUIC实现了在同一物理连接上可以有多个独立的逻辑数据流（如下图）。实现了数据流的单独传输，就解决了TCP中队头阻塞的问题。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>QUIC 基于 UDP 实现，是 HTTP/3 中的底层支撑协议，该协议基于 UDP，又取了 TCP 中的精华，实现了即快又可靠的协议</p>
 <h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
 <li><a href="http://www.ruanyifeng.com/blog/2018/03/http2_server_push.html" target="_blank" rel="noopener">HTTP/2 服务器推送（Server Push）教程</a></li>
 <li><a href="https://juejin.im/entry/5981c5df518825359a2b9476" target="_blank" rel="noopener">HTTP1.0、HTTP1.1 和 HTTP2.0 的区别</a></li>
 <li><a href="https://segmentfault.com/a/1190000011172823" target="_blank" rel="noopener">浅析HTTP/2的多路复用</a></li>
+<li><a href="https://juejin.im/post/5d9abde7e51d4578110dc77f#heading-16" target="_blank" rel="noopener">解密HTTP/2与HTTP/3 的新特性</a></li>
 </ul>
 
       
@@ -463,6 +498,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2019/09/11/javascript/灵活使用JavaScript 闭包/" rel="prev" title="灵活使用javaScript闭包">
+                灵活使用javaScript闭包 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -541,7 +580,7 @@
               
                 <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -612,7 +651,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#长链接-Keep-Alive-解决的问题"><span class="nav-number">1.</span> <span class="nav-text">长链接(Keep-Alive)解决的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP1-1还是存在效率问题"><span class="nav-number">2.</span> <span class="nav-text">HTTP1.1还是存在效率问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-2的多路复用"><span class="nav-number">3.</span> <span class="nav-text">HTTP/2的多路复用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以前我们做的性能优化不适用于HTTP-2了"><span class="nav-number">4.</span> <span class="nav-text">以前我们做的性能优化不适用于HTTP/2了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#长链接-Keep-Alive-解决的问题"><span class="nav-number">1.</span> <span class="nav-text">长链接(Keep-Alive)解决的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP1-1还是存在效率问题"><span class="nav-number">2.</span> <span class="nav-text">HTTP1.1还是存在效率问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-2的多路复用"><span class="nav-number">3.</span> <span class="nav-text">HTTP/2的多路复用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以前我们做的性能优化不适用于HTTP-2了"><span class="nav-number">4.</span> <span class="nav-text">以前我们做的性能优化不适用于HTTP/2了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-3-新特性"><span class="nav-number">5.</span> <span class="nav-text">HTTP/3 新特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-HTTP-2-的缺点"><span class="nav-number">5.1.</span> <span class="nav-text">1.HTTP/2 的缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-HTTP-3简介"><span class="nav-number">6.</span> <span class="nav-text">2.HTTP/3简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-QUIC新功能"><span class="nav-number">7.</span> <span class="nav-text">3.QUIC新功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
