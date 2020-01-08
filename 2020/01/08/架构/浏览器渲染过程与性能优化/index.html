@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="性能优化,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="浏览器渲染过程与性能优化 1. 为什么 Javascript 要是单线程的 ?这是因为 Javascript 这门脚本语言诞生的使命所致!JavaScript 为处理页面中用户的交互,以及操作 DOM 树、CSS 样式树来给用户呈现一份动态而丰富的交互体验和服务器逻辑的交互处理。 如果 JavaScript 是多线程的方式来操作这些 UI DOM,则可能出现 UI 操作的冲突。 如果 Javasc">
+<meta name="keywords" content="性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器渲染过程与性能优化">
+<meta property="og:url" content="https://yelingxiao.github.io/blog/2020/01/08/架构/浏览器渲染过程与性能优化/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="浏览器渲染过程与性能优化 1. 为什么 Javascript 要是单线程的 ?这是因为 Javascript 这门脚本语言诞生的使命所致!JavaScript 为处理页面中用户的交互,以及操作 DOM 树、CSS 样式树来给用户呈现一份动态而丰富的交互体验和服务器逻辑的交互处理。 如果 JavaScript 是多线程的方式来操作这些 UI DOM,则可能出现 UI 操作的冲突。 如果 Javasc">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-08T07:55:08.303Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浏览器渲染过程与性能优化">
+<meta name="twitter:description" content="浏览器渲染过程与性能优化 1. 为什么 Javascript 要是单线程的 ?这是因为 Javascript 这门脚本语言诞生的使命所致!JavaScript 为处理页面中用户的交互,以及操作 DOM 树、CSS 样式树来给用户呈现一份动态而丰富的交互体验和服务器逻辑的交互处理。 如果 JavaScript 是多线程的方式来操作这些 UI DOM,则可能出现 UI 操作的冲突。 如果 Javasc">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yelingxiao.github.io/blog/2020/01/08/架构/浏览器渲染过程与性能优化/">
+
+
+
+
+
+  <title>浏览器渲染过程与性能优化 | Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Life is Now</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yelingxiao.github.io/blog/blog/2020/01/08/架构/浏览器渲染过程与性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yelingxiao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/blog/images/heading.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浏览器渲染过程与性能优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-08T14:58:17+08:00">
+                2020-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/浏览器原理/" itemprop="url" rel="index">
+                    <span itemprop="name">浏览器原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://juejin.im/post/5e143104e51d45414a4715f7" target="_blank" rel="noopener">浏览器渲染过程与性能优化</a></p>
+<h4 id="1-为什么-Javascript-要是单线程的"><a href="#1-为什么-Javascript-要是单线程的" class="headerlink" title="1. 为什么 Javascript 要是单线程的 ?"></a>1. 为什么 Javascript 要是单线程的 ?</h4><p>这是因为 Javascript 这门脚本语言诞生的使命所致!JavaScript 为处理页面中用户的交互,以及操作 DOM 树、CSS 样式树来给用户呈现一份动态而丰富的交互体验和服务器逻辑的交互处理。</p>
+<p>如果 JavaScript 是多线程的方式来操作这些 UI DOM,则可能出现 UI 操作的冲突。</p>
+<p>如果 Javascript 是多线程的话,在多线程的交互下,处于 UI 中的 DOM 节点就可能成为一个临界资源,</p>
+<p>假设存在两个线程同时操作一个 DOM,一个负责修改一个负责删除,那么这个时候就需要浏览器来裁决如何生效哪个线程的执行结果。</p>
+<p>当然我们可以通过锁来解决上面的问题。但为了避免因为引入了锁而带来更大的复杂性,Javascript 在最初就选择了单线程执行。</p>
+<h4 id="2-为什么-JS-阻塞页面加载"><a href="#2-为什么-JS-阻塞页面加载" class="headerlink" title="2. 为什么 JS 阻塞页面加载 ?"></a>2. 为什么 JS 阻塞页面加载 ?</h4><p>由于 JavaScript 是可操纵 DOM 的,如果在修改这些元素属性同时渲染界面（即 JavaScript 线程和 UI 线程同时运行）,那么渲染线程前后获得的元素数据就可能不一致了。</p>
+<p>因此为了防止渲染出现不可预期的结果,浏览器设置 <strong>GUI 渲染线程与 JavaScript 引擎为互斥</strong>的关系。</p>
+<p>当 JavaScript 引擎执行时 GUI 线程会被挂起,GUI 更新会被保存在一个队列中等到引擎线程空闲时立即被执行。</p>
+<p>从上面我们可以推理出,由于 GUI 渲染线程与 JavaScript 执行线程是互斥的关系,</p>
+<p>当浏览器在执行 JavaScript 程序的时候,GUI 渲染线程会被保存在一个队列中,直到 JS 程序执行完成,才会接着执行。</p>
+<p>因此如果 JS 执行的时间过长,这样就会造成页面的渲染不连贯,导致页面渲染加载阻塞的感觉。</p>
+<h4 id="3-css-加载会造成阻塞吗-？"><a href="#3-css-加载会造成阻塞吗-？" class="headerlink" title="3. css 加载会造成阻塞吗 ？"></a>3. css 加载会造成阻塞吗 ？</h4><p>由上面浏览器渲染流程我们可以看出 :</p>
+<p>DOM 解析和 CSS 解析是两个并行的进程,所以 <strong>CSS 加载不会阻塞 DOM 的解析</strong>。</p>
+<p>然而,由于 Render Tree 是依赖于 DOM Tree 和 CSSOM Tree 的,</p>
+<p>所以他必须等待到 CSSOM Tree 构建完成,也就是 CSS 资源加载完成(或者 CSS 资源加载失败)后,才能开始渲染。</p>
+<p>因此,<strong>CSS 加载会阻塞 Dom 的渲染</strong>。</p>
+<p>由于 JavaScript 是可操纵 DOM 和 css 样式 的,如果在修改这些元素属性同时渲染界面（即 JavaScript 线程和 UI 线程同时运行）,那么渲染线程前后获得的元素数据就可能不一致了。</p>
+<p>因此为了防止渲染出现不可预期的结果,浏览器设置 <strong>GUI 渲染线程与 JavaScript 引擎为互斥</strong>的关系。</p>
+<p>因此,样式表会在后面的 js 执行前先加载执行完毕,所以<strong>css 会阻塞后面 js 的执行</strong>。</p>
+<h4 id="4-DOMContentLoaded-与-load-的区别"><a href="#4-DOMContentLoaded-与-load-的区别" class="headerlink" title="4. DOMContentLoaded 与 load 的区别 ?"></a>4. DOMContentLoaded 与 load 的区别 ?</h4><p>当 DOMContentLoaded 事件触发时,仅当 DOM 解析完成后,不包括样式表,图片。我们前面提到 <strong>CSS 加载会阻塞 Dom 的渲染和后面 js 的执行,js 会阻塞 Dom 解析</strong>,所以我们可以得到结论:<br>当文档中没有脚本时,浏览器解析完文档便能触发 DOMContentLoaded 事件。如果文档中包含脚本,则脚本会阻塞文档的解析,而脚本需要等 CSSOM 构建完成才能执行。在任何情况下,DOMContentLoaded 的触发不需要等待图片等其他资源加载完成。</p>
+<p>当 onload 事件触发时,页面上所有的 DOM,样式表,脚本,图片等资源已经加载完毕。</p>
+<p>DOMContentLoaded -&gt; load。</p>
+<h4 id="5-什么是-CRP-即关键渲染路径-Critical-Rendering-Path-如何优化"><a href="#5-什么是-CRP-即关键渲染路径-Critical-Rendering-Path-如何优化" class="headerlink" title="5. 什么是 CRP,即关键渲染路径(Critical Rendering Path)? 如何优化 ?"></a>5. 什么是 CRP,即关键渲染路径(Critical Rendering Path)? 如何优化 ?</h4><p>关键渲染路径是浏览器将 HTML CSS JavaScript 转换为在屏幕上呈现的像素内容所经历的一系列步骤。也就是我们上面说的浏览器渲染流程。</p>
+<p>为尽快完成首次渲染,我们需要最大限度减小以下三种可变因素:</p>
+<ul>
+<li>关键资源的数量: 可能阻止网页首次渲染的资源。</li>
+<li>关键路径长度: 获取所有关键资源所需的往返次数或总时间。</li>
+<li>关键字节: 实现网页首次渲染所需的总字节数,等同于所有关键资源传送文件大小的总和。</li>
+</ul>
+<h4 id="1-优化-DOM"><a href="#1-优化-DOM" class="headerlink" title="1. 优化 DOM"></a>1. 优化 DOM</h4><ul>
+<li>删除不必要的代码和注释包括空格,尽量做到最小化文件。</li>
+<li>可以利用 GZIP 压缩文件。</li>
+<li>结合 HTTP 缓存文件。</li>
+</ul>
+<h4 id="2-优化-CSSOM"><a href="#2-优化-CSSOM" class="headerlink" title="2. 优化 CSSOM"></a>2. 优化 CSSOM</h4><p>缩小、压缩以及缓存同样重要,对于 <strong>CSSOM</strong> 我们前面重点提过了它会<strong>阻止页面呈现</strong>,因此我们可以从这方面考虑去优化。</p>
+<ul>
+<li>减少关键 CSS 元素数量</li>
+<li>当我们声明样式表时,请密切关注媒体查询的类型,它们极大地影响了 CRP 的性能 。</li>
+</ul>
+<h4 id="3-优化-JavaScript"><a href="#3-优化-JavaScript" class="headerlink" title="3. 优化 JavaScript"></a>3. 优化 JavaScript</h4><p>当浏览器遇到 script 标记时,会<strong>阻止解析器继续操作,直到 CSSOM 构建完毕</strong>,JavaScript 才会运行并继续完成 DOM 构建过程。</p>
+<ul>
+<li>async: 当我们在 script 标记添加 async 属性以后,浏览器遇到这个 script 标记时会继续解析 DOM,同时脚本也不会被 CSSOM 阻止,即不会阻止 CRP。</li>
+<li>defer: 与 async 的区别在于,脚本需要等到文档解析后（ DOMContentLoaded 事件前）执行,而 async 允许脚本在文档解析时位于后台运行（两者下载的过程不会阻塞 DOM,但执行会）。</li>
+<li>当我们的脚本不会修改 DOM 或 CSSOM 时,推荐使用 async 。</li>
+<li>预加载 —— preload &amp; prefetch 。</li>
+<li>DNS 预解析 —— dns-prefetch 。</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>分析并用 <strong>关键资源数 关键字节数 关键路径长度</strong> 来描述我们的 CRP 。</li>
+<li>最小化关键资源数: 消除它们（内联）、推迟它们的下载（defer）或者使它们异步解析（async）等等 。</li>
+<li>优化关键字节数（缩小、压缩）来减少下载时间 。</li>
+<li>优化加载剩余关键资源的顺序: 让关键资源（CSS）尽早下载以减少 CRP 长度 。</li>
+</ul>
+<p><a href="https://github.com/fi3ework/blog/issues/16" target="_blank" rel="noopener">前端性能优化之关键路径渲染优化</a></p>
+<h4 id="7-谈谈浏览器的回流与重绘"><a href="#7-谈谈浏览器的回流与重绘" class="headerlink" title="7. 谈谈浏览器的回流与重绘"></a>7. 谈谈浏览器的回流与重绘</h4><p><strong>回流必将引起重绘,重绘不一定会引起回流。</strong></p>
+<h4 id="回流-Reflow"><a href="#回流-Reflow" class="headerlink" title="回流(Reflow)"></a>回流(Reflow)</h4><p>当 Render Tree 中部分或全部元素的尺寸、结构、或某些属性发生改变时,浏览器重新渲染部分或全部文档的过程称为回流。</p>
+<p>会导致回流的操作：</p>
+<p>页面首次渲染</p>
+<p>浏览器窗口大小发生改变</p>
+<p>元素尺寸或位置发生改变元素内容变化（文字数量或图片大小等等）</p>
+<p>元素字体大小变化</p>
+<p>添加或者删除可见的 DOM 元素</p>
+<p>激活 CSS 伪类（例如：:hover）</p>
+<p>查询某些属性或调用某些方法</p>
+<p>一些常用且会导致回流的属性和方法:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">clientWidth、clientHeight、clientTop、clientLeft</span><br><span class="line"></span><br><span class="line">offsetWidth、offsetHeight、offsetTop、offsetLeft</span><br><span class="line"></span><br><span class="line">scrollWidth、scrollHeight、scrollTop、scrollLeft</span><br><span class="line"></span><br><span class="line">scrollIntoView()、scrollIntoViewIfNeeded()</span><br><span class="line"></span><br><span class="line">getComputedStyle()</span><br><span class="line"></span><br><span class="line">getBoundingClientRect()</span><br><span class="line"></span><br><span class="line">scrollTo()</span><br></pre></td></tr></table></figure>
+
+<h4 id="重绘-Repaint"><a href="#重绘-Repaint" class="headerlink" title="重绘(Repaint)"></a>重绘(Repaint)</h4><p>当页面中元素样式的改变并不影响它在文档流中的位置时（例如：color、background-color、visibility 等）,浏览器会将新样式赋予给元素并重新绘制它,这个过程称为重绘。</p>
+<h4 id="性能影响"><a href="#性能影响" class="headerlink" title="性能影响"></a>性能影响</h4><p><strong>回流比重绘的代价要更高。</strong></p>
+<p>有时即使仅仅回流一个单一的元素,它的父元素以及任何跟随它的元素也会产生回流。现代浏览器会对频繁的回流或重绘操作进行优化：浏览器会维护一个队列,把所有引起回流和重绘的操作放入队列中,如果队列中的任务数量或者时间间隔达到一个阈值的,浏览器就会将队列清空,进行一次批处理,这样可以把多次回流和重绘变成一次。</p>
+<p>当你访问以下属性或方法时,浏览器会立刻清空队列:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">clientWidth、clientHeight、clientTop、clientLeft</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">offsetWidth、offsetHeight、offsetTop、offsetLeft</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">scrollWidth、scrollHeight、scrollTop、scrollLeft</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">width、height</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">getComputedStyle()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">getBoundingClientRect()</span><br></pre></td></tr></table></figure>
+
+<p>因为队列中可能会有影响到这些属性或方法返回值的操作,即使你希望获取的信息与队列中操作引发的改变无关,浏览器也会强行清空队列,确保你拿到的值是最精确的。</p>
+<h4 id="如何避免"><a href="#如何避免" class="headerlink" title="如何避免"></a>如何避免</h4><h5 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h5><ul>
+<li>避免使用 table 布局。</li>
+<li>尽可能在 DOM 树的最末端改变 class。</li>
+<li>避免设置多层内联样式。</li>
+<li>将动画效果应用到 position 属性为 absolute 或 fixed 的元素上。</li>
+<li>避免使用 CSS 表达式（例如：calc()）。</li>
+</ul>
+<h5 id="Javascript"><a href="#Javascript" class="headerlink" title="Javascript"></a>Javascript</h5><ul>
+<li>避免频繁操作样式,最好一次性重写 style 属性,或者将样式列表定义为 class 并一次性更改 class 属性。</li>
+<li>避免频繁操作 DOM,创建一个 documentFragment,在它上面应用所有 DOM 操作,最后再把它添加到文档中。</li>
+<li>也可以先为元素设置 display: none,操作结束后再把它显示出来。因为在 display 属性为 none 的元素上进行的 DOM 操作不会引发回流和重绘。</li>
+<li>避免频繁读取会引发回流/重绘的属性,如果确实需要多次使用,就用一个变量缓存起来。</li>
+<li>对具有复杂动画的元素使用绝对定位,使它脱离文档流,否则会引起父元素及后续元素频繁回流。</li>
+</ul>
+<h4 id="无线性能优化：Composite-渲染层合并"><a href="#无线性能优化：Composite-渲染层合并" class="headerlink" title="无线性能优化：Composite 渲染层合并"></a><strong>无线性能优化：Composite</strong> 渲染层合并</h4><p><a href="https://fed.taobao.org/blog/taofed/do71ct/performance-composite/?spm=taofed.blogs.blog-list.10.67bd5ac8fHy0LS" target="_blank" rel="noopener">无线性能优化：Composite</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/性能优化/" rel="tag"><i class="fa fa-tags"></i> 性能优化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2019/09/11/javascript/灵活使用JavaScript 闭包/" rel="next" title="灵活使用javaScript闭包">
+                <i class="fa fa-chevron-left"></i> 灵活使用javaScript闭包
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/blog/images/heading.jpeg" alt="Yelingxiao">
+            
+              <p class="site-author-name" itemprop="name">Yelingxiao</p>
+              <p class="site-description motion-element" itemprop="description">Blog.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yelingxiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:yelingxiao0925@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-为什么-Javascript-要是单线程的"><span class="nav-number">1.</span> <span class="nav-text">1. 为什么 Javascript 要是单线程的 ?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-为什么-JS-阻塞页面加载"><span class="nav-number">2.</span> <span class="nav-text">2. 为什么 JS 阻塞页面加载 ?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-css-加载会造成阻塞吗-？"><span class="nav-number">3.</span> <span class="nav-text">3. css 加载会造成阻塞吗 ？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-DOMContentLoaded-与-load-的区别"><span class="nav-number">4.</span> <span class="nav-text">4. DOMContentLoaded 与 load 的区别 ?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-什么是-CRP-即关键渲染路径-Critical-Rendering-Path-如何优化"><span class="nav-number">5.</span> <span class="nav-text">5. 什么是 CRP,即关键渲染路径(Critical Rendering Path)? 如何优化 ?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-优化-DOM"><span class="nav-number">6.</span> <span class="nav-text">1. 优化 DOM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-优化-CSSOM"><span class="nav-number">7.</span> <span class="nav-text">2. 优化 CSSOM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-优化-JavaScript"><span class="nav-number">8.</span> <span class="nav-text">3. 优化 JavaScript</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-谈谈浏览器的回流与重绘"><span class="nav-number">10.</span> <span class="nav-text">7. 谈谈浏览器的回流与重绘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#回流-Reflow"><span class="nav-number">11.</span> <span class="nav-text">回流(Reflow)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重绘-Repaint"><span class="nav-number">12.</span> <span class="nav-text">重绘(Repaint)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#性能影响"><span class="nav-number">13.</span> <span class="nav-text">性能影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何避免"><span class="nav-number">14.</span> <span class="nav-text">如何避免</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CSS"><span class="nav-number">14.1.</span> <span class="nav-text">CSS</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Javascript"><span class="nav-number">14.2.</span> <span class="nav-text">Javascript</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#无线性能优化：Composite-渲染层合并"><span class="nav-number">15.</span> <span class="nav-text">无线性能优化：Composite 渲染层合并</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yelingxiao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
