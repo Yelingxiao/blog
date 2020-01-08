@@ -114,7 +114,7 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="构建就是把源代码转换成发布到线上的可执行 JavaScrip、CSS、HTML 代码，包括如下内容。  代码转换：TypeScript 编译成 JavaScript、SCSS 编译成 CSS 等。 文件优化：压缩 JavaScript、CSS、HTML 代码，压缩合并图片等。 代码分割：提取多个页面的公共代码、提取首屏不需要执行部分的代码让其异步加载。 模块合并：在采用模块化的项目里会有很多个模块">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-08T02:37:31.603Z">
+<meta property="og:updated_time" content="2020-01-08T03:48:56.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="打包工具">
 <meta name="twitter:description" content="构建就是把源代码转换成发布到线上的可执行 JavaScrip、CSS、HTML 代码，包括如下内容。  代码转换：TypeScript 编译成 JavaScript、SCSS 编译成 CSS 等。 文件优化：压缩 JavaScript、CSS、HTML 代码，压缩合并图片等。 代码分割：提取多个页面的公共代码、提取首屏不需要执行部分的代码让其异步加载。 模块合并：在采用模块化的项目里会有很多个模块">
@@ -415,13 +415,21 @@
 <p>Webpack的缺点是只能用于采用模块化开发的项目。</p>
 <h3 id="webpack-构建流程"><a href="#webpack-构建流程" class="headerlink" title="webpack 构建流程"></a>webpack 构建流程</h3><p>Webpack 的运行流程是一个串行的过程,从启动到结束会依次执行以下流程 :</p>
 <ol>
-<li>初始化参数：从配置文件和 Shell 语句中读取与合并参数,得出最终的参数。</li>
-<li>开始编译：用上一步得到的参数初始化 Compiler 对象,加载所有配置的插件,执行对象的 run 方法开始执行编译。</li>
-<li>确定入口：根据配置中的 entry 找出所有的入口文件。</li>
-<li>编译模块：从入口文件出发,调用所有配置的 Loader 对模块进行翻译,再找出该模块依赖的模块,再递归本步骤直到所有入口依赖的文件都经过了本步骤的处理。</li>
-<li>完成模块编译：在经过第 4 步使用 Loader 翻译完所有模块后,得到了每个模块被翻译后的最终内容以及它们之间的依赖关系。</li>
-<li>输出资源：根据入口和模块之间的依赖关系,组装成一个个包含多个模块的 Chunk,再把每个 Chunk 转换成一个单独的文件加入到输出列表,这步是可以修改输出内容的最后机会。</li>
-<li>输出完成：在确定好输出内容后,根据配置确定输出的路径和文件名,把文件内容写入到文件系统。</li>
+<li><p>初始化参数：从配置文件和 Shell 语句中读取与合并参数,得出最终的参数。</p>
+</li>
+<li><p>开始编译：用上一步得到的参数初始化 Compiler 对象,加载所有配置的插件,执行对象的 run 方法开始执行编译。</p>
+</li>
+<li><p>确定入口：根据配置中的 entry 找出所有的入口文件。</p>
+</li>
+<li><p>编译模块：从入口文件出发,调用所有配置的 Loader 对模块进行翻译,再找出该模块依赖的模块,再递归本步骤直到所有入口依赖的文件都经过了本步骤的处理。</p>
+</li>
+<li><p>完成模块编译：在经过第 4 步使用 Loader 翻译完所有模块后,得到了每个模块被翻译后的最终内容以及它们之间的依赖关系。</p>
+</li>
+<li><p>输出资源：根据入口和模块之间的依赖关系,组装成一个个包含多个模块的 Chunk,再把每个 Chunk 转换成一个单独的文件加入到输出列表,这步是可以修改输出内容的最后机会。</p>
+</li>
+<li><p>输出完成：在确定好输出内容后,根据配置确定输出的路径和文件名,把文件内容写入到文件系统。</p>
+<p>在以上过程中,Webpack 会在特定的时间点广播出特定的事件,插件在监听到感兴趣的事件后会执行特定的逻辑,并且插件可以调用 Webpack 提供的 API 改变 Webpack 的运行结果</p>
+</li>
 </ol>
 <h3 id="Rollup"><a href="#Rollup" class="headerlink" title="Rollup"></a>Rollup</h3><blockquote>
 <p>相关资料：</p>
@@ -567,7 +575,7 @@
               
                 <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
