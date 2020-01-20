@@ -95,7 +95,7 @@
 
 
 
-  <meta name="keywords" content="vue,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -106,18 +106,17 @@
 
 
 
-<meta name="description" content="Blog.">
-<meta name="keywords" content="vue">
+<meta name="description" content="##小程序工程化迁移文档 码云代码仓库地址：https://gitee.com/f2ee/miniProgramCli 目录结构12345678910111213141516171819202122232425262728293031323334353637383940414243|-- miniProgramCli |-- dist                   // 打包后文件 |--">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Object的变化侦测">
-<meta property="og:url" content="https://yelingxiao.github.io/blog/2019/05/29/vue/Object的变化侦测/index.html">
+<meta property="og:title" content="Blog">
+<meta property="og:url" content="https://yelingxiao.github.io/blog/2020/01/20/架构/小程序工程化迁移文档/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="Blog.">
+<meta property="og:description" content="##小程序工程化迁移文档 码云代码仓库地址：https://gitee.com/f2ee/miniProgramCli 目录结构12345678910111213141516171819202122232425262728293031323334353637383940414243|-- miniProgramCli |-- dist                   // 打包后文件 |--">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-29T09:18:07.568Z">
+<meta property="og:updated_time" content="2020-01-20T01:42:58.607Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Object的变化侦测">
-<meta name="twitter:description" content="Blog.">
+<meta name="twitter:title" content="Blog">
+<meta name="twitter:description" content="##小程序工程化迁移文档 码云代码仓库地址：https://gitee.com/f2ee/miniProgramCli 目录结构12345678910111213141516171819202122232425262728293031323334353637383940414243|-- miniProgramCli |-- dist                   // 打包后文件 |--">
 
 
 
@@ -147,13 +146,13 @@
 
 
 
-  <link rel="canonical" href="https://yelingxiao.github.io/blog/2019/05/29/vue/Object的变化侦测/">
+  <link rel="canonical" href="https://yelingxiao.github.io/blog/2020/01/20/架构/小程序工程化迁移文档/">
 
 
 
 
 
-  <title>Object的变化侦测 | Blog</title>
+  <title> | Blog</title>
   
 
 
@@ -290,7 +289,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yelingxiao.github.io/blog/blog/2019/05/29/vue/Object的变化侦测/">
+    <link itemprop="mainEntityOfPage" href="https://yelingxiao.github.io/blog/blog/2020/01/20/架构/小程序工程化迁移文档/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yelingxiao">
@@ -307,7 +306,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Object的变化侦测</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -319,8 +318,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-29T20:54:42+08:00">
-                2019-05-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-20T09:39:42+08:00">
+                2020-01-20
               </time>
             
 
@@ -329,28 +328,6 @@
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/vue/" itemprop="url" rel="index">
-                    <span itemprop="name">vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -379,7 +356,58 @@
       
 
       
-        
+        <p>##小程序工程化迁移文档</p>
+<p><strong>码云代码仓库地址</strong>：<a href="https://gitee.com/f2ee/miniProgramCli" target="_blank" rel="noopener">https://gitee.com/f2ee/miniProgramCli</a></p>
+<h4 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">|-- miniProgramCli</span><br><span class="line"> |-- dist                   // 打包后文件</span><br><span class="line"> |-- loaders                  // webpack loader文件夹</span><br><span class="line"> |   |-- replaceCDNImg.js           // 替换图片为CDN链接</span><br><span class="line"> |-- plugin                  // webpack 插件文件夹</span><br><span class="line"> |   |-- MinaRuntimePlugin           // 抽离webpack运行时插件</span><br><span class="line"> |   |-- MinaWebpackPlugin           // 小程序配置多入口插件</span><br><span class="line"> |-- scripts                  // 脚本</span><br><span class="line"> |   |-- auto_ptp               // 自动化埋点</span><br><span class="line"> |   |-- new_page               // 新建模版</span><br><span class="line"> |   |   |-- index.js</span><br><span class="line"> |   |   |-- template             // 模版文件</span><br><span class="line"> |   |       |-- template.js</span><br><span class="line"> |   |       |-- template.json</span><br><span class="line"> |   |       |-- template.less</span><br><span class="line"> |   |       |-- template.wxml</span><br><span class="line"> |   |-- qtshe_upload             // 自动上传src/images 图片至七牛服务器</span><br><span class="line"> |   |   |-- index.js</span><br><span class="line"> |   |   |-- manifest.json           // 已经上传的图片数据</span><br><span class="line"> |   |   |-- helper</span><br><span class="line"> |   |-- replace_cdn_img            // 替换src源码图片为CDN链接</span><br><span class="line"> |       |-- index.js</span><br><span class="line"> |-- src                    // 小程序源代码</span><br><span class="line">     |-- app.js                // 小程序实例文件，具体可查看小程序官方文档</span><br><span class="line">     |-- app.json</span><br><span class="line">     |-- app.less</span><br><span class="line">     |-- sitemap.json</span><br><span class="line">     |-- components              // 组件</span><br><span class="line">     |-- images                // 图片</span><br><span class="line">     |-- lib                  // 第三方代码包文件</span><br><span class="line">     |-- pages                 // 页面</span><br><span class="line">     |-- utils                 // 主要用于存放各种工具类、全局方法等</span><br><span class="line"> |-- .babelrc                 // babel 配置信息</span><br><span class="line"> |-- .eslintignore               // eslint忽略文件</span><br><span class="line"> |-- .eslintrc.js               // eslint 配置信息</span><br><span class="line"> |-- .gitignore                // git 提交忽略文件</span><br><span class="line"> |-- README.md                 // 自述文件</span><br><span class="line"> |-- package.json               // 工程配置信息</span><br><span class="line"> |-- postcss.config.js             // postcss 配置信息</span><br><span class="line"> |-- project.config.json            // 小程序配置信息</span><br><span class="line"> |-- webpack.config.js             // webpack 配置信息</span><br><span class="line"> |-- yarn.lock                 // 包依赖版本信息</span><br><span class="line"> |-- .git                   // git信息</span><br></pre></td></tr></table></figure>
+
+<h4 id="迁移步骤"><a href="#迁移步骤" class="headerlink" title="迁移步骤"></a>迁移步骤</h4><ol>
+<li><p>下载miniProgramCli项目到本地，将miniProgramCli除了node_modules,src和project.config.json，.git(注意.git文件)全部复制到目标项目。新建src文件夹将项目内原有文件全部放入src文件夹内，除了project.config.json和.git文件，他们在外层目录下。</p>
+</li>
+<li><p>在project.config.json加上一行配置<strong>“miniprogramRoot”: “dist/“</strong>，目的是微信小程序编辑器编译文件指向dist/目录下。（支付宝没有project.config.json，可以忽略这个步骤，编辑器手动指向目标项目的根目录下）。</p>
+</li>
+<li><p>支付宝小程序需要修改<strong>(微信小程序不需要这个步骤)。</strong></p>
+<ul>
+<li><p>webpack.config.js 俩处output 配置下 <strong>globalObject: ‘wx’ —&gt; globalObject: ‘my’</strong> , stylesLoaders配置下 <strong>name: ‘path.wxss’ —&gt;name: ‘path.acss’</strong></p>
+</li>
+<li><p><strong>scripts —&gt; auto_ptp —&gt; helper —&gt; config.js 修改 埋点事件列表</strong></p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="4">
+<li><p>yarn install 或 npm install 。</p>
+</li>
+<li><p>yarn lint 或 npm run lint (node &gt;= 9.10.0)。</p>
+</li>
+<li><p>yarn dev 或 npm run dev 手动修改eslint 报错，最好将模块规范修改为es6 module规范。</p>
+</li>
+<li><p>在微信开发者工具 —&gt; 详情 —&gt; 本地设置 勾掉es6 转es5, 增强编译， 勾起自定义出来命令，上传前预处理加上（默认为： npm run build-prod）,可自定义修改。</p>
+</li>
+<li><p>yarn dev 或 npm run dev 命令行没有报错和编辑器控制台没有报错即为迁移完成。</p>
+</li>
+</ol>
+<h3 id="开发文档"><a href="#开发文档" class="headerlink" title="开发文档"></a>开发文档</h3><ol>
+<li>yarn install 或 npm install 开发前确保自己的依赖包下载完全</li>
+<li>npm run np xxx (如npm run np demo, 在pages内新增一个自定义模版文件，并在app.json pages下添加了对应路由)</li>
+<li>npm run dev 或 npm run test 或 npm run pro 来切换需要对应开发的环境</li>
+<li>Eslint 推荐使用ESLint VScode 插件可智能提醒哪里有lint错误，VScode setting 勾选上☑️Eslint: Auto Fix On Save 可自动修复部分eslint 错误。</li>
+<li>建议关闭 文件自动保存</li>
+<li>支持less语法</li>
+<li>支持npm引入第三方包（如：npm install loadsh）</li>
+<li>支持别名<ul>
+<li>@ === src</li>
+<li>src === src</li>
+<li>utils === src/utils</li>
+<li>components === src/component</li>
+</ul>
+</li>
+<li>npm run upImg 可将src/images内所有文件自动上传cdn</li>
+<li>在less和js文件内写 <strong>“~images/xxx.png”</strong>。打包出图片路径可自动替换为cdn链接</li>
+<li>npm run replaceImg 替换源码内图片路径为cdn链接</li>
+<li>npm run ptp 自动埋点</li>
+<li>微信开发这工具点击上传 自动跑 npm run build-prod的命令 并自动加上查找并加上埋点</li>
+</ol>
+
       
     </div>
     
@@ -396,12 +424,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/blog/tags/vue/" rel="tag"><i class="fa fa-tags"></i> vue</a>
-          
-        </div>
-      
 
       
       
@@ -411,8 +433,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2019/05/22/架构/从 URL 输入到页面展现/" rel="next" title="从 URL 输入到页面展现">
-                <i class="fa fa-chevron-left"></i> 从 URL 输入到页面展现
+              <a href="/blog/2020/01/20/架构/webpack在小程序端的应用/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
@@ -420,10 +442,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/blog/2019/06/18/架构/JS中的内存管理/" rel="prev" title="JS中的内存管理">
-                JS中的内存管理 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -475,8 +493,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -554,6 +581,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#目录结构"><span class="nav-number">1.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#迁移步骤"><span class="nav-number">2.</span> <span class="nav-text">迁移步骤</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#开发文档"><span class="nav-number"></span> <span class="nav-text">开发文档</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
