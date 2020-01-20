@@ -106,18 +106,18 @@
 
 
 
-<meta name="description" content="##webpack在小程序端的应用  前言：小程序是我们公司最重要的前端业务，所以小程序开发体验极为重要。但是不同于H5 在工程化方面的成熟，小程序在工程化方面的探讨并不多。目前原生的小程序开发并不具有规范化、工具化、自动化、持续集成系统等  工程化做什么先看下目前原生小程序开发当中存在哪些问题需要解决：  没有 eslint 等代码检查工具  不支持ES7等后续的js语法  npm包引入不友好">
+<meta name="description" content="前言：小程序是我们公司最重要的前端业务，所以小程序开发体验极为重要。但是不同于H5 在工程化方面的成熟，小程序在工程化方面的探讨并不多。目前原生的小程序开发并不具有规范化、工具化、自动化、持续集成系统等  工程化做什么先看下目前原生小程序开发当中存在哪些问题需要解决：  没有 eslint 等代码检查工具  不支持ES7等后续的js语法  npm包引入不友好  不支持 css预编译器,作为一种主">
 <meta name="keywords" content="小程序工程化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="性能优化">
+<meta property="og:title" content="webpack在小程序端的应用">
 <meta property="og:url" content="https://yelingxiao.github.io/blog/2020/01/20/架构/webpack在小程序端的应用/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="##webpack在小程序端的应用  前言：小程序是我们公司最重要的前端业务，所以小程序开发体验极为重要。但是不同于H5 在工程化方面的成熟，小程序在工程化方面的探讨并不多。目前原生的小程序开发并不具有规范化、工具化、自动化、持续集成系统等  工程化做什么先看下目前原生小程序开发当中存在哪些问题需要解决：  没有 eslint 等代码检查工具  不支持ES7等后续的js语法  npm包引入不友好">
+<meta property="og:description" content="前言：小程序是我们公司最重要的前端业务，所以小程序开发体验极为重要。但是不同于H5 在工程化方面的成熟，小程序在工程化方面的探讨并不多。目前原生的小程序开发并不具有规范化、工具化、自动化、持续集成系统等  工程化做什么先看下目前原生小程序开发当中存在哪些问题需要解决：  没有 eslint 等代码检查工具  不支持ES7等后续的js语法  npm包引入不友好  不支持 css预编译器,作为一种主">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-20T01:54:54.656Z">
+<meta property="og:updated_time" content="2020-01-20T01:57:38.646Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="性能优化">
-<meta name="twitter:description" content="##webpack在小程序端的应用  前言：小程序是我们公司最重要的前端业务，所以小程序开发体验极为重要。但是不同于H5 在工程化方面的成熟，小程序在工程化方面的探讨并不多。目前原生的小程序开发并不具有规范化、工具化、自动化、持续集成系统等  工程化做什么先看下目前原生小程序开发当中存在哪些问题需要解决：  没有 eslint 等代码检查工具  不支持ES7等后续的js语法  npm包引入不友好">
+<meta name="twitter:title" content="webpack在小程序端的应用">
+<meta name="twitter:description" content="前言：小程序是我们公司最重要的前端业务，所以小程序开发体验极为重要。但是不同于H5 在工程化方面的成熟，小程序在工程化方面的探讨并不多。目前原生的小程序开发并不具有规范化、工具化、自动化、持续集成系统等  工程化做什么先看下目前原生小程序开发当中存在哪些问题需要解决：  没有 eslint 等代码检查工具  不支持ES7等后续的js语法  npm包引入不友好  不支持 css预编译器,作为一种主">
 
 
 
@@ -153,7 +153,7 @@
 
 
 
-  <title>性能优化 | Blog</title>
+  <title>webpack在小程序端的应用 | Blog</title>
   
 
 
@@ -307,7 +307,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">性能优化</h1>
+          <h1 class="post-title" itemprop="name headline">webpack在小程序端的应用</h1>
         
 
         <div class="post-meta">
@@ -379,8 +379,7 @@
       
 
       
-        <p>##webpack在小程序端的应用</p>
-<blockquote>
+        <blockquote>
 <p>前言：小程序是我们公司最重要的前端业务，所以小程序开发体验极为重要。但是不同于H5 在工程化方面的成熟，小程序在工程化方面的探讨并不多。目前原生的小程序开发并不具有规范化、工具化、自动化、持续集成系统等</p>
 </blockquote>
 <h3 id="工程化做什么"><a href="#工程化做什么" class="headerlink" title="工程化做什么"></a>工程化做什么</h3><p>先看下目前原生小程序开发当中存在哪些问题需要解决：</p>
@@ -495,8 +494,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/blog/2020/01/20/架构/小程序工程化迁移文档/" rel="prev" title="性能优化">
-                性能优化 <i class="fa fa-chevron-right"></i>
+              <a href="/blog/2020/01/20/架构/小程序工程化迁移文档/" rel="prev" title="小程序工程化迁移文档">
+                小程序工程化迁移文档 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
