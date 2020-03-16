@@ -114,7 +114,7 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="CSS的盒子模型 CSS选择器 水平居中 水平垂直居中 position定位 BFC规范 CSS优化、提高性能的方法 css画图形  CSS的盒子模型标准盒子模型：宽度=内容的宽度（content）+ border + padding + margin 低版本IE盒子模型：宽度=内容宽度（content+border+padding）+ margin  box-sizing属性 用来控制元素的盒">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-29T09:55:38.140Z">
+<meta property="og:updated_time" content="2020-02-05T09:22:28.436Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSS">
 <meta name="twitter:description" content="CSS的盒子模型 CSS选择器 水平居中 水平垂直居中 position定位 BFC规范 CSS优化、提高性能的方法 css画图形  CSS的盒子模型标准盒子模型：宽度=内容的宽度（content）+ border + padding + margin 低版本IE盒子模型：宽度=内容宽度（content+border+padding）+ margin  box-sizing属性 用来控制元素的盒">
@@ -603,6 +603,10 @@
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.child</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">border-top</span>: <span class="number">40px</span> solid transparent;</span><br><span class="line">  <span class="attribute">border-left</span>: <span class="number">40px</span> solid transparent;</span><br><span class="line">  <span class="attribute">border-right</span>: <span class="number">40px</span> solid transparent;</span><br><span class="line">  <span class="attribute">border-bottom</span>: <span class="number">40px</span> solid <span class="number">#ff0000</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><a href="#CSS">[↑] 回到顶部</a></p>
+<p><strong>什么时候display: inline-block会产生间隙?如何解决？</strong></p>
+<p><strong>原因：</strong>inline-block元素间有空格或是换行，因此产生了间隙。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">letter-spacing</span>: -<span class="number">3px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -726,7 +730,7 @@
               
                 <a href="/blog/archives/">
               
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -737,7 +741,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/blog/categories/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -748,7 +752,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/blog/tags/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
