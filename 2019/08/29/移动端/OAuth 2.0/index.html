@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="OAuth 2.0," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="OAuth 2.0问题： 快递员进入小区送货被门禁拦截，怎么优雅处理？ 如果我把自己的密码，告诉快递员，他就拥有了与我同样的权限，这样好像不太合适。万一我想取消他进入小区的权力，也很麻烦，我自己的密码也得跟着改了，还得通知其他的快递员。 有没有一种办法，让快递员能够自由进入小区，又不必知道小区居民的密码，而且他的唯一权限就是送货，其他需要密码的场合，他都没有权限？ 方案： 第一步，门禁系统的">
+<meta name="keywords" content="OAuth 2.0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OAuth 2.0">
+<meta property="og:url" content="https://yelingxiao.github.io/blog/2019/08/29/移动端/OAuth 2.0/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="OAuth 2.0问题： 快递员进入小区送货被门禁拦截，怎么优雅处理？ 如果我把自己的密码，告诉快递员，他就拥有了与我同样的权限，这样好像不太合适。万一我想取消他进入小区的权力，也很麻烦，我自己的密码也得跟着改了，还得通知其他的快递员。 有没有一种办法，让快递员能够自由进入小区，又不必知道小区居民的密码，而且他的唯一权限就是送货，其他需要密码的场合，他都没有权限？ 方案： 第一步，门禁系统的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://images2017.cnblogs.com/blog/1096103/201708/1096103-20170824142737402-1297004164.png">
+<meta property="og:updated_time" content="2019-08-29T08:39:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OAuth 2.0">
+<meta name="twitter:description" content="OAuth 2.0问题： 快递员进入小区送货被门禁拦截，怎么优雅处理？ 如果我把自己的密码，告诉快递员，他就拥有了与我同样的权限，这样好像不太合适。万一我想取消他进入小区的权力，也很麻烦，我自己的密码也得跟着改了，还得通知其他的快递员。 有没有一种办法，让快递员能够自由进入小区，又不必知道小区居民的密码，而且他的唯一权限就是送货，其他需要密码的场合，他都没有权限？ 方案： 第一步，门禁系统的">
+<meta name="twitter:image" content="https://images2017.cnblogs.com/blog/1096103/201708/1096103-20170824142737402-1297004164.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yelingxiao.github.io/blog/2019/08/29/移动端/OAuth 2.0/"/>
+
+
+
+
+
+  <title>OAuth 2.0 | Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Life is Now</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yelingxiao.github.io/blog/blog/2019/08/29/移动端/OAuth 2.0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yelingxiao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/heading.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OAuth 2.0</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-29T16:39:23+08:00">
+                2019-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/OAuth-2-0/" itemprop="url" rel="index">
+                    <span itemprop="name">OAuth 2.0</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="exporter-version" content="Evernote Mac 9.0.5 (458014)"><meta name="author" content="cgkoreyoshi@qq.com"><meta name="created" content="2019-06-21 02:33:39 +0000"><meta name="source" content="desktop.mac"><meta name="updated" content="2019-06-21 03:22:36 +0000"><title>OAuth 2.0</title></head><body><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><div style="font-size: 13px;"><br></div><div><font style="font-size: 24px;">问题：
+</font></div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">快递员进入小区送货被门禁拦截，怎么优雅处理？
+</div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">如果我把自己的密码，告诉快递员，他就拥有了与我同样的权限，这样好像不太合适。万一我想取消他进入小区的权力，也很麻烦，我自己的密码也得跟着改了，还得通知其他的快递员。
+</div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">有没有一种办法，让快递员能够自由进入小区，又不必知道小区居民的密码，而且他的唯一权限就是送货，其他需要密码的场合，他都没有权限？
+</div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;"><br></div><div><font style="font-size: 24px;">方案：
+</font></div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">第一步，门禁系统的密码输入器下面，增加一个按钮，叫做"获取授权"。快递员需要首先按这个按钮，去申请授权。
+</div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">第二步，他按下按钮以后，屋主（也就是我）的手机就会跳出对话框：有人正在要求授权。系统还会显示该快递员的姓名、工号和所属的快递公司。
+</div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">我确认请求属实，就点击按钮，告诉门禁系统，我同意给予他进入小区的授权。
+</div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">第三步，门禁系统得到我的确认以后，向快递员显示一个进入小区的令牌（access token）。令牌就是类似密码的一串数字，只在短期内（比如七天）有效。
+</div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">第四步，快递员向门禁系统输入令牌，进入小区。
+</div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;"><br></div><div style="font-size: 13px;">有人可能会问，为什么不是远程为快递员开门，而要为他单独生成一个令牌？这是因为快递员可能每天都会来送货，第二天他还可以复用这个令牌。另外，有的小区有多重门禁，快递员可以使用同一个令牌通过它们。
+</div><div style="font-size: 13px;"><br></div></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><font style="font-size: 24px;">技术实现流程图：</font></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><div>可参考此链接理解：<a href="https://www.cnblogs.com/flashsun/p/7424071.html" target="_blank" rel="noopener">https://www.cnblogs.com/flashsun/p/7424071.html</a></div></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div><img src="https://images2017.cnblogs.com/blog/1096103/201708/1096103-20170824142737402-1297004164.png" height="517" width="731"></div><div><br style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none;"></div><div><br></div><div><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><span style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-variant-caps: normal; letter-spacing: normal; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><font style="font-size: 24px;">举个🌰 --微信H5授权登录流程
+</font></span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">可参考文章理解：<a href="https://www.cnblogs.com/txw1958/p/weixin71-oauth20.html" style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;" target="_blank" rel="noopener">https://www.cnblogs.com/txw1958/p/weixin71-oauth20.html</a></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">1. 用户关注微信公众账号 (测试微信号需要此流程，线上不需要)</span></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">2. 微信公众账号后台配置 请求回调域名。</span></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">3. 用户点击H5，跳转到微信授权页面URL（下文有标准链接）</span></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">4. 微信服务器询问用户是否同意授权给微信公众账号(scope为snsapi_base时无此步骤)</span></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">5. 用户同意(scope为snsapi_base时无此步骤)</span></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">6. 服务器将CODE通过回调传给微信公众号后端</span></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">7. 微信公众账号后台通过CODE向微信服务器请求Access Token</span></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">8. 服务器返回Access Token和OpenID给微信公众账号</span></div><div style="text-align: start;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">10. 微信公众账号通过Access Token向服务器请求用户信息(scope为snsapi_base时无此步骤)</span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">11. 服务器将用户信息回送给微信公众账号(scope为snsapi_base时无此步骤)</span><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><br></span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">官方文档：<span style="font-size: 13px; color: rgb(51, 51, 51); font-family: Arial;"><a href="https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html" target="_blank" rel="noopener">https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html</a></span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">接入的标准链接</div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><div style="padding: 0px; white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important;"><a href="https://open.weixin.qq.com/connect/oauth2/authorize" style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;" target="_blank" rel="noopener">https://open.weixin.qq.com/connect/oauth2/authorize</a><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">?</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(255, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">appid</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">=APPID&amp;</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(255, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">redirect_uri</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">=REDIRECT_URI&amp;</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(255, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">response_type</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">=code&amp;</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(255, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">scope</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">=SCOPE&amp;</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(255, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">state</span><span style="white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important; line-height: 1.8;">=STATE#wechat_redirect</span></div><div style=" padding: 0px; white-space: pre-wrap; overflow-wrap: break-word; font-size: 12px; color: rgb(0, 0, 0); font-variant-ligatures: normal; orphans: 2; widows: 2; font-family: &quot;Courier New&quot; !important;"><div><br style=" padding: 0px; color: rgb(51, 51, 51); font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-variant-ligatures: normal; white-space: normal; background-color: rgb(255, 255, 255);"></div><div><span style="font-size: 12px; font-family: &quot;Courier New&quot;;"><br></span></div><div><span style="font-size: 12px; font-family: &quot;Courier New&quot;;">参数说明</span></div><div style="padding: 0px; -webkit-tap-highlight-color: transparent; overflow-x: auto; max-width: 100%; color: rgb(34, 34, 34); font-family: -apple-system, system-ui, &quot;SF UI Text&quot;, &quot;Helvetica Neue&quot;, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei UI&quot;, &quot;Microsoft YaHei&quot;, Arial, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><table style="border-collapse: collapse; min-width: 100%;"><colgroup><col style="width: 147px;"><col style="width: 89px;"><col style="width: 553px;"></colgroup><tbody style=" padding: 0px; -webkit-tap-highlight-color: transparent;"><tr style=" padding: 0px; -webkit-tap-highlight-color: transparent;"><td style="font-weight: 600; text-align: left; white-space: nowrap; color: rgb(136, 136, 136); width: 147px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">参数</div></td><td style="font-weight: 600; text-align: left; white-space: nowrap; color: rgb(136, 136, 136); width: 89px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">是否必须</div></td><td style="font-weight: 600; text-align: left; white-space: nowrap; color: rgb(136, 136, 136); width: 553px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">说明</div></td></tr><tr style=" padding: 0px; -webkit-tap-highlight-color: transparent;"><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 147px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">appid </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 89px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">是 </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 553px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">公众号的唯一标识 </div></td></tr><tr style=" padding: 0px; -webkit-tap-highlight-color: transparent;"><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 147px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">redirect_uri </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 89px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">是 </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 553px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理 </div></td></tr><tr style=" padding: 0px; -webkit-tap-highlight-color: transparent;"><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 147px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">response_type </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 89px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">是 </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 553px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">返回类型，请填写code </div></td></tr><tr style=" padding: 0px; -webkit-tap-highlight-color: transparent;"><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 147px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">scope </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 89px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">是 </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 553px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且， <b>即使在未关注的情况下，只要用户授权，也能获取其信息</b> ） </div></td></tr><tr style=" padding: 0px; -webkit-tap-highlight-color: transparent;"><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 147px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">state </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 89px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">否 </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 553px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节 </div></td></tr><tr style=" padding: 0px; -webkit-tap-highlight-color: transparent;"><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 147px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">#wechat_redirect </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 89px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">是 </div></td><td style="color: rgb(53, 53, 53); text-align: left; box-sizing: border-box; word-break: normal; width: 553px; padding: 8px; border: 1px solid;"><div style="font-size:14px;">无论直接打开还是做页面302重定向时候，必须带此参数 </div></td></tr></tbody></table></div><div style="padding: 0px; color: rgb(34, 34, 34); font-family: -apple-system, system-ui, &quot;SF UI Text&quot;, &quot;Helvetica Neue&quot;, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei UI&quot;, &quot;Microsoft YaHei&quot;, Arial, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; margin-top: 1em; margin-bottom: 1em;"><span style="color: rgb(34, 34, 34); font-family: -apple-system, system-ui, &quot;SF UI Text&quot;, &quot;Helvetica Neue&quot;, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei UI&quot;, &quot;Microsoft YaHei&quot;, Arial, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;-en-paragraph:true;">下图为scope等于snsapi_userinfo时的授权页面：
+</span></div></div></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">参考文章
+</span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><a href="https://www.jianshu.com/p/95ecbbb3a7c7" style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;" target="_blank" rel="noopener">https://www.jianshu.com/p/95ecbbb3a7c7</a></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><a href="http://www.ruanyifeng.com/blog/2019/04/oauth_design.html" style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2019/04/oauth_design.html</a></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><a href="https://www.cnblogs.com/gabrielchen/p/5800225.html" style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;" target="_blank" rel="noopener">https://www.cnblogs.com/gabrielchen/p/5800225.html</a></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">NodeJs配置 微信授权登录的详细流程。</div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="font-size: 13px; color: rgb(51, 51, 51); font-family: Arial;"><a href="https://juejin.im/post/5d09864b6fb9a07f0052ddfe?utm_source=gold_browser_extension" target="_blank" rel="noopener">https://juejin.im/post/5d09864b6fb9a07f0052ddfe</a></span><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><font style="font-size: 24px;">课题：</font></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">oauth 1.0是怎样的？</span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">oauth 2.0</span><span style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">优势在哪里，有什么待改进的地方
+</span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">openId的互信方案相比，有什么优缺点</div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">web应用和app应用的差别
+</span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">开放oauth 2.0接入，后端SDK该如何设计
+</span></div><div style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><span style="color:rgb(51, 51, 51);font-family:Arial, Helvetica, sans-serif;font-size:13px;font-variant-caps:normal;"><span style="caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;">常见的SDK集成方案：Everyauth 和 passportjs了解</span></span><br></div><div><br></div></body></html>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/OAuth-2-0/" rel="tag"><i class="fa fa-tags"></i> OAuth 2.0</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2019/08/29/vue/Object的变化侦测/" rel="prev" title="Object的变化侦测">
+                Object的变化侦测 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/blog/images/heading.jpeg"
+                alt="Yelingxiao" />
+            
+              <p class="site-author-name" itemprop="name">Yelingxiao</p>
+              <p class="site-description motion-element" itemprop="description">Blog.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/blog/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/blog/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/blog/tags/index.html">
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yelingxiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:yelingxiao0925@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yelingxiao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
